@@ -1,0 +1,12 @@
+.vscode/
+
+obj/*
+bin/*
+
+doc/html/*
+doc/latex/*
+
+!obj/.gitkeep
+!bin/DroidSans.ttf
+
+build/
