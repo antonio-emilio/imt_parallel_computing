@@ -19,9 +19,9 @@ Model_CPU_fast
 void Model_CPU_fast
 ::step()
 {
-    std::fill(accelerationsx.begin(), accelerationsx.end(), 0);
-    std::fill(accelerationsy.begin(), accelerationsy.end(), 0);
-    std::fill(accelerationsz.begin(), accelerationsz.end(), 0);
+	std::memset(accelerationsx.data(), 0, n_particles * sizeof(float));
+	std::memset(accelerationsy.data(), 0, n_particles * sizeof(float));
+	std::memset(accelerationsz.data(), 0, n_particles * sizeof(float));
 
     /*#pragma omp parallel for
     for (int i = 0; i < n_particles; i++)
