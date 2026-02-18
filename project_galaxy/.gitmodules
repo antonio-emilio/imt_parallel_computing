@@ -1,0 +1,6 @@
+[submodule "lib/cli"]
+	path = lib/cli
+	url = https://github.com/CLIUtils/CLI11.git
+[submodule "lib/xsimd"]
+	path = lib/xsimd
+	url = https://github.com/xtensor-stack/xsimd.git
