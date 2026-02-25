@@ -135,3 +135,4 @@ if(GALAX_LINK_SDL2)
     endif(SDL2_FOUND)
 endif(GALAX_LINK_SDL2)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -march=native -mavx2 -mfma")
