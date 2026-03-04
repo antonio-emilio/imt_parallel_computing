@@ -1,5 +1,6 @@
 #ifdef GALAX_MODEL_CPU_FAST
 
+#include <algorithm>
 #include <cmath>
 
 #include "Model_CPU_fast.hpp"
@@ -17,9 +18,12 @@ Model_CPU_fast ::Model_CPU_fast(const Initstate &initstate, Particles &particles
 
 void Model_CPU_fast ::step()
 {
-    std::memset(accelerationsx.data(), 0, n_particles * sizeof(float));
-    std::memset(accelerationsy.data(), 0, n_particles * sizeof(float));
-    std::memset(accelerationsz.data(), 0, n_particles * sizeof(float));
+    std::fill(accelerationsx.begin(), accelerationsx.end(), 0.0f);
+    std::fill(accelerationsy.begin(), accelerationsy.end(), 0.0f);
+    std::fill(accelerationsz.begin(), accelerationsz.end(), 0.0f);
+
+    const b_type b10 = b_type(10.0f);
+    const b_type b1 = b_type(1.0f);
 
 #pragma omp parallel for
     for (int i = 0; i < n_particles; i += b_type::size)
@@ -39,12 +43,14 @@ void Model_CPU_fast ::step()
             const b_type rdiffy = b_type(particles.y[j]) - rposy_i;
             const b_type rdiffz = b_type(particles.z[j]) - rposz_i;
 
-            b_type rdij = rdiffx * rdiffx + rdiffy * rdiffy + rdiffz * rdiffz;
+            b_type diffy2 = rdiffy * rdiffy;
+            b_type rdij = xs::fma(rdiffx, rdiffx, diffy2);
+            rdij = xs::fma(rdiffz, rdiffz, rdij);
+            rdij = xs::max(rdij, b1);
 
-            // SIMD version of the if-else statement
-            b_type inv_sqrt_r = xs::rsqrt(rdij);
-            b_type factor = b_type(10.0f) * inv_sqrt_r / rdij;
-            rdij = xs::select(rdij < 1.0f, b_type(10.0f), factor);
+            b_type inv_dij = xs::rsqrt(rdij);
+            inv_dij = inv_dij * inv_dij * inv_dij;
+            rdij = b10 * inv_dij;
 
             b_type mass_factor = b_type(initstate.masses[j]);
             raccx_i += rdiffx * rdij * mass_factor;
