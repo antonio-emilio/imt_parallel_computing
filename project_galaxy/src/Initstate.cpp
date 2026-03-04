@@ -15,8 +15,11 @@ Initstate
     std::ifstream ifs;
 	ifs.open(filename, std::ifstream::in);
 	std::vector<std::vector<float> > all_particles (max_n_particles, std::vector<float>(7));
-
-	size_t n_lines_read = 0;
+    // 2D vector for all Particles, with 7 columns
+	
+    // For each simulated particle
+    // Read the 7 values, and store in all_particles
+    size_t n_lines_read = 0;
 	while (n_lines_read < all_particles.size())
 	{
 		for (size_t i = 0; i < 7; i++)
@@ -26,6 +29,7 @@ Initstate
 		n_lines_read++;
 	}
 
+    // For each simulated particle, store the 7 values in the corresponding vector
 	size_t stride = max_n_particles / n_particles;
 	for (size_t i = 0; i < n_particles; i++)
     {

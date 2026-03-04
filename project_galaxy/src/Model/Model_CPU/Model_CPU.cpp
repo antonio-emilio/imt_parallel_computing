@@ -12,12 +12,16 @@ Model_CPU
   accelerationsy(n_particles),
   accelerationsz(n_particles)
 {
+    // Initialize using the data from the Initstate object
 	for (int i = 0; i < n_particles; i++)
 	{
 		particles.x[i] = initstate.positionsx[i];
 		particles.y[i] = initstate.positionsy[i];
 		particles.z[i] = initstate.positionsz[i];
 	}
+    // std::copy - copy elements from one range to another. 
+    // It takes three arguments: the first two specify the range of elements to copy (the source), 
+    // and the third specifies the beginning of the destination range where the elements will be copied to.
     std::copy(initstate.velocitiesx.begin(), initstate.velocitiesx.end(), velocitiesx.begin());
     std::copy(initstate.velocitiesy.begin(), initstate.velocitiesy.end(), velocitiesy.begin());
     std::copy(initstate.velocitiesz.begin(), initstate.velocitiesz.end(), velocitiesz.begin());
