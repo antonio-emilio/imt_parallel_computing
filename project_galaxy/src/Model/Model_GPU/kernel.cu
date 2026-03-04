@@ -7,12 +7,12 @@
 
 __global__ void compute_acc(float3 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU, float* massesGPU, int n_particles)
 {
-	// unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 }
 
 __global__ void maj_pos(float3 * positionsGPU, float3 * velocitiesGPU, float3 * accelerationsGPU, int n_particles)
 {
-	// unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned int i = blockIdx.x * blockDim.x + threadIdx.x;
 
 }
 
