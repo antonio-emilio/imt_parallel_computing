@@ -28,7 +28,6 @@ void Model_CPU_fast ::step()
 #pragma omp parallel for
     for (int i = 0; i < n_particles; i += b_type::size)
     {
-        // Load_unaligned - load data from memory into SIMD registers without requiring specific alignment. This is useful when the data may not be aligned to the SIMD register size, but it can be slower than aligned loads if the data is not properly aligned in memory.
         const b_type rposx_i = b_type::load_unaligned(&particles.x[i]);
         const b_type rposy_i = b_type::load_unaligned(&particles.y[i]);
         const b_type rposz_i = b_type::load_unaligned(&particles.z[i]);
