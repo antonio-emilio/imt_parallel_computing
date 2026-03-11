@@ -3,7 +3,7 @@
 #include "cuda.h"
 #include "kernel.cuh"
 #define DIFF_T (0.1f)
-#define EPS (1.0f)
+#define EPS (2.0f)
 __global__ void compute_acc(
 	float3 * positionsGPU, 
 	float3 * velocitiesGPU, 
@@ -41,8 +41,8 @@ __global__ void compute_acc(
 			}
 			else
 			{
-				dij = std::sqrt(dij);
-				dij = 10.0 / (dij * dij * dij);
+				float inv = rsqrtf(dij);
+				dij = 10.0f * inv * inv * inv;
 			}
 
 			ax += diffx * dij * massesGPU[j];
