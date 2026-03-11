@@ -109,7 +109,7 @@ __global__ void maj_pos(float4 * bodiesGPU, float4 * velocitiesGPU, float4 * acc
 
 void update_position_cu(float4* bodiesGPU, float4* velocitiesGPU, float4* accelerationsGPU, int n_particles)
 {
-	int nthreads = 256;
+	int nthreads = 512;
 	int nblocks =  (n_particles + (nthreads -1)) / nthreads;
 	size_t shared_bytes = nthreads * sizeof(float4);
 

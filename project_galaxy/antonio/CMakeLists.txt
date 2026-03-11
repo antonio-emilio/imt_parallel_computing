@@ -44,6 +44,7 @@ include_directories (PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/src/")
 add_library (galax_display SHARED ${SRC_FILES_DISPLAY})
 if(GALAX_LINK_CUDA)
     add_library (galax_cuda SHARED ${SRC_FILES_CUDA})
+    target_compile_options(galax_cuda PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--use_fast_math>)
 endif(GALAX_LINK_CUDA)
 add_executable(galax ${SRC_FILES_MAIN})
 

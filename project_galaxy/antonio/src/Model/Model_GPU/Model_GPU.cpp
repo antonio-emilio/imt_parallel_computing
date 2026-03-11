@@ -34,9 +34,9 @@ void update_position_gpu(float4* bodiesGPU, float4* velocitiesGPU, float4* accel
 {
 	update_position_cu(bodiesGPU, velocitiesGPU, accelerationsGPU, n_particles);
 	cudaError_t cudaStatus;
-	cudaStatus = cudaDeviceSynchronize();
+	cudaStatus = cudaGetLastError();
 	if (cudaStatus != cudaSuccess)
-		std::cout << "error: unable to synchronize threads" << std::endl;
+		std::cout << "error: unable to launch kernels" << std::endl;
 }
 
 /*
@@ -55,8 +55,9 @@ model_cpu:
 		Starts with the initial velocities, but later it will modify them.
 	*/		
 Model_GPU
-::Model_GPU(const Initstate& initstate, Particles& particles)
+::Model_GPU(const Initstate& initstate, Particles& particles, bool sync_particles_to_host)
 : Model(initstate, particles),
+  sync_particles_to_host(sync_particles_to_host),
   bodiesf4       (n_particles),
   velocitiesf4   (n_particles),
   accelerationsf4(n_particles)
@@ -128,10 +129,17 @@ void Model_GPU
 			adds the acceleration caused by particle j to particle i.
 	*/
 	update_position_gpu(bodiesGPU, velocitiesGPU, accelerationsGPU, n_particles);
-	
+
+	if (!sync_particles_to_host)
+	{
+		cudaError_t cudaStatus = cudaDeviceSynchronize();
+		if (cudaStatus != cudaSuccess)
+			std::cout << "error: unable to synchronize threads" << std::endl;
+		return;
+	}
+
 	cuda_memcpy(bodiesf4.data(), bodiesGPU, n_particles * sizeof(float4), cudaMemcpyDeviceToHost);
 
-	
 	for (int i = 0; i < n_particles; i++)
 	{
 		particles.x[i] = bodiesf4[i].x;

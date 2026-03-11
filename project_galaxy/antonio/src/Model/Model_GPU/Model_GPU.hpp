@@ -11,6 +11,7 @@
 class Model_GPU : public Model
 {
 private:
+	bool sync_particles_to_host;
 
 	std::vector<float4> bodiesf4       ;
 	std::vector<float4> velocitiesf4   ;
@@ -21,7 +22,7 @@ private:
 	float4* accelerationsGPU;
 
 public:
-	Model_GPU(const Initstate& initstate, Particles& particles);
+	Model_GPU(const Initstate& initstate, Particles& particles, bool sync_particles_to_host);
 
 	virtual ~Model_GPU();
 
